@@ -22,8 +22,7 @@ public class VideoPoker {
 			this.handCards[i] = this.newDeck.getCardsID(num);
 			this.newDeck.setCardsID(num, newDeck.getCardsID(end));
 			end--;
-		}
-		
+		}	
 	}
 	
 	public void changeHandCards(boolean[] changeFlag) {
@@ -36,7 +35,16 @@ public class VideoPoker {
 				handCards[i] = newDeck.getCardsID(num);
 				this.newDeck.setCardsID(num, newDeck.getCardsID(end));
 			}
+			end--;
 		}
+	}
+	
+	public String checkRank(int[] handCards) {
+		String rank = "";
+		int[] suitList = new int[handCards.length];
+		int[] rankList = new int[handCards.length];
+		
+		return rank;
 	}
 
 }
