@@ -1,6 +1,6 @@
 package poker;
 
-import java.util.Random;
+import java.util.*;
 
 public class VideoPoker {
 	static private int handCardsNum = 5;
@@ -44,7 +44,63 @@ public class VideoPoker {
 		int[] suitList = new int[handCards.length];
 		int[] rankList = new int[handCards.length];
 		
+		for(int i=0; i<handCards.length; i++) {
+			int num;
+			num = handCards[i] / 13;
+			suitList[i] = num;
+		}
+		
+		for(int i=0; i<handCards.length; i++) {
+			int num;
+			num = handCards[i] % 13;
+			rankList[i] = num;
+		}
+		
 		return rank;
+	}
+	
+	public boolean checkFlush(int[] suitList) {
+		HashSet<Integer> suitCheck = new HashSet<Integer>();
+		boolean result = false;
+		
+		for(int i=0; i<suitList.length; i++) {
+			if(!suitCheck.contains(suitList[i])) {
+				suitCheck.add(suitList[i]);
+			}
+		}
+		if(suitCheck.size() == 1) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	public boolean checkStraight(int[] rankList) {
+		List<Integer> straightCheck = new ArrayList<Integer>();
+		boolean result = false;
+		
+		for(int i=0; i<rankList.length; i++) {
+			straightCheck.add(rankList[i]);
+		}
+		
+		Collections.sort(straightCheck);
+		
+		int len = straightCheck.size();
+		int temp = Math.abs(straightCheck.get(0) - straightCheck.get(len - 1));
+		if(temp > 4 && temp != 12) {
+			return result;
+		}
+		
+		for(int i=0; i<len-1; i++) {
+			temp = straightCheck.get(i+1) - straightCheck.get(i);
+			if(temp == 0) {
+				return result;
+			}
+		}
+		
+		result = true;
+		
+		return result;
 	}
 
 }
