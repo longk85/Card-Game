@@ -2,17 +2,17 @@ package poker;
 
 /**
  * @author Moebear
- * Õâ¸öÀàÓÃÀ´±íÊ¾Ò»¸±ÆË¿ËÅÆ¡£
+ * è¿™ä¸ªç±»ç”¨äºè¡¨ç¤ºä¸€å‰¯æ‰‘å…‹ã€‚
  */
 public class CardDeck {
-	private int cardsNum = 52; //Ò»¸±ÅÆµÄÅÆÊı
-	private String[] suits = {"Heart", "Spade", "Dimond", "Club"}; //ËÄÖÖ»¨É«µÄÃû×Ö
-	private String[] ranks = {"A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"}; //Ê®Èı¸öÅÆÖµ
-	private int[] cardsID = new int[cardsNum]; //Ã¿ÕÅÅÆµÄIDĞòÁĞ
-	private String[][] cardsName = new String[suits.length][ranks.length]; //Ã¿ÕÅÅÆµÄÃû×Ö£¬°üÀ¨»¨É«ºÍÅÆÖµ
+	private int cardsNum = 52; //ä¸€å‰¯æ‰‘å…‹ç‰Œçš„å¼ æ•°
+	private String[] suits = {"Heart", "Spade", "Dimond", "Club"}; //èŠ±è‰²
+	private String[] ranks = {"A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"}; //ç‰Œå€¼
+	private int[] cardsID = new int[cardsNum]; //æ¯å¼ ç‰Œçš„IDåºåˆ—
+	private String[][] cardsName = new String[suits.length][ranks.length]; //æ¯å¼ ç‰Œçš„åå­—ï¼ŒåŒ…æ‹¬èŠ±è‰²å’Œç‰Œå€¼
 	
 	/**
-	 * The constructing method of class CardDeck.
+	 * æ„é€ å‡½æ•°
 	 */
 	public CardDeck() {
 		for(int i=0; i<cardsNum; i++) {
@@ -21,9 +21,9 @@ public class CardDeck {
 	}
 	
 	/**
-	 * Í¨¹ıÅÆµÄIDÀ´»ñÈ¡ÅÆµÄÃû×Ö
-	 * @param cardID ÅÆµÄID
-	 * @return ÅÆµÄÃû×Ö
+	 * é€šè¿‡ç‰Œçš„IDè·å–åå­—
+	 * @param cardID ç‰Œçš„ID
+	 * @return ç‰Œçš„åå­—
 	 */
 	public String getCardName(int cardID) {
 		int suitsID;

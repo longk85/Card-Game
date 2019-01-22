@@ -4,21 +4,21 @@ import java.util.*;
 
 /**
  * @author moebear
- * Jacks or Better µÄ»ù±¾¹æÔòºÍÓÎÏ·Âß¼­
+ * Jacks or Better çš„æ¸¸æˆé€»è¾‘
  */
 public class VideoPoker {
-	private int handCardsNum = 5; //ÊÖÅÆÊıÁ¿
-	private CardDeck newDeck = new CardDeck(); //Ã¿Ò»¾ÖÓÎÏ·´´½¨Ò»¸±ĞÂÅÆ×é
-	private int[] handCards = new int[handCardsNum]; //ÊÖÅÆµÄIDĞòÁĞ
-	private String[] rankList = {"Royal flush", "Straight flush", "4 of a kind", "Full house", "Flush", "Straight", "3 of a kind", "Two pair", "Jacks or better"}; //ÖĞ½±ÅÆĞÍµÄÃû×ÖĞòÁĞ
-	private int[] reward = {4000, 250, 125, 45, 30, 20, 15, 10, 5}; //¶ÔÓ¦µÄÖĞ½±ÅÆĞÍµÄ½±Àø»Ø±¨
+	private int handCardsNum = 5; //æ‰‹ç‰Œæ•°é‡
+	private CardDeck newDeck = new CardDeck(); //æ¯å±€æ¸¸æˆç”Ÿæˆä¸€å‰¯æ–°ç‰Œ
+	private int[] handCards = new int[handCardsNum]; //æ‰‹ç‰ŒIDåºåˆ—
+	private String[] rankList = {"Royal flush", "Straight flush", "4 of a kind", "Full house", "Flush", "Straight", "3 of a kind", "Two pair", "Jacks or better"}; //ä¸­å¥–ç‰Œå‹åç§°
+	private int[] reward = {4000, 250, 125, 45, 30, 20, 15, 10, 5}; //ä¸­å¥–ç‰Œå‹å¥–åŠ±
 	
 	public VideoPoker() {
 		
 	}
 	
 	/**
-	 * Ëæ»úÉú³ÉÎåÕÅÊÖÅÆ
+	 * éšæœºç”Ÿæˆäº”å¼ æ‰‹ç‰Œ
 	 */
 	public void generateHandCards() {
 		Random random = new Random();
@@ -33,12 +33,12 @@ public class VideoPoker {
 	}
 	
 	/**
-	 * ÔÚÍæ¼Ò¾ö¶¨ÉáÆúµÄÅÆºóËæ»úÉú³ÉĞÂÅÆ
-	 * @param changeFlag ÓÃÀ´±íÊ¾ÉáÆúÄÄĞ©ÅÆ£ºtrue ÉáÆú£» false ±£Áô
+	 * æ›´æ¢ä¸è¦çš„æ‰‹ç‰Œ
+	 * @param changeFlag 
 	 */
 	public void changeHandCards(boolean[] changeFlag) {
 		Random random = new Random();
-		int end = newDeck.getCardsNum() - 6;
+		int end = newDeck.getCardsNum() - 6; //ä»å‰©ä¸‹47å¼ ç‰Œä¸­é€‰æ‹©
 		int num;
 		for(int i=0; i<this.handCards.length; i++) {
 			if(changeFlag[i] == true) {
@@ -51,41 +51,82 @@ public class VideoPoker {
 	}
 	
 	/**
-	 * ÖĞ½±ÅÆĞÍ¼ì²é
-	 * @param handCards ´ı¼ì²éµÄÊÖÅÆIDĞòÁĞ
-	 * @return ÖĞ½±ÅÆĞÍµÄÃû×Ö
+	 * ç¡®å®šä¸­å¥–ç‰Œå‹
+	 * @param handCards æ‰‹ç‰ŒIDåºåˆ—
+	 * @return ä¸­å¥–ç±»å‹
 	 */
 	public String checkRank(int[] handCards) {
 		String rank = "";
-		int[] suitList = new int[handCards.length]; //»¨É«IDĞòÁĞ
-		int[] rankList = new int[handCards.length]; //ÅÆÖµIDĞòÁĞ
-		boolean flush;
-		boolean straight;
-		int pairs;
-		int trikind;
-		int forkind;
+		int[] suitList = new int[handCards.length]; //èŠ±è‰²åºåˆ—
+		int[] rankList = new int[handCards.length]; //ç‰Œå€¼åºåˆ—
+		boolean royal = false;
+		boolean flush = false;
+		boolean straight = false;
+		String sameCard = "nothing";
 		
-		/* »ñÈ¡ÊÖÅÆµÄ»¨É«IDĞòÁĞ */
+		/* ç¡®å®šèŠ±è‰²åºåˆ— */
 		for(int i=0; i<handCards.length; i++) {
 			int num;
 			num = handCards[i] / 13;
 			suitList[i] = num;
 		}
 		
-		/* »ñÈ¡ÊÖÅÆµÄÅÆÖµIDĞòÁĞ */
+		/* ç¡®å®šç‰Œå€¼åºåˆ— */
 		for(int i=0; i<handCards.length; i++) {
 			int num;
 			num = handCards[i] % 13;
 			rankList[i] = num;
 		}
 		
+		flush = this.checkFlush(suitList);
+		straight = this.checkStraight(rankList);
+		sameCard = this.checkSameCards(rankList);
+		royal = this.checkRoyal(rankList);
+		
+		if(royal == true && flush == true && straight == true) {
+			rank = this.rankList[0];
+		} else if(royal == false && flush == true && straight == true) {
+			rank = this.rankList[1];
+		} else if(straight == false && flush == true) {
+			rank = this.rankList[4];
+		} else if(straight == true && flush == false) {
+			rank = this.rankList[5];
+		} else if(sameCard != "" && sameCard != "nothing" && sameCard != "pair") {
+			rank = sameCard;
+		} else if(sameCard == "pair") {
+			if(this.checkHighPair(rankList) == true) {
+				rank = this.rankList[8];
+			}else{
+				rank = "";
+			}
+		} else {
+			rank = "";
+		}
+		
 		return rank;
 	}
 	
 	/**
-	 * ¼ì²éÅÆĞÍÊÇ·ñÊÇÍ¬»¨
-	 * @param suitList ÊÖÅÆ»¨É«IDĞòÁĞ
-	 * @return ÊÇ»ò·ñ
+	 * ç¡®å®šå¥–åŠ±ç‚¹æ•°
+	 * @param rank å¥–åŠ±ç­‰çº§
+	 * @return å¥–åŠ±ç‚¹æ•°
+	 */
+	public int getRewardPoints(String rank) {
+		int rewardPoints = 0;
+		
+		for(int i=0; i<this.rankList.length; i++) {
+			if(rank == rankList[i]) {
+				rewardPoints = this.reward[i];
+			}
+		}
+		
+		return rewardPoints;
+	}
+	
+	/**
+	 * åˆ¤æ–­æ˜¯å¦åŒèŠ±
+	 * @param suitList æ‰‹ç‰ŒèŠ±è‰²åºåˆ—
+	 * @return æ˜¯æˆ–å¦
 	 */
 	public boolean checkFlush(int[] suitList) {
 		HashSet<Integer> suitCheck = new HashSet<Integer>();
@@ -104,9 +145,9 @@ public class VideoPoker {
 	}
 	
 	/**
-	 * ¼ì²éÊÇ·ñË³×Ó
-	 * @param rankList ÊÖÅÆÅÆÖµIDĞòÁĞ
-	 * @return ÊÇ»ò·ñ
+	 * åˆ¤æ–­æ˜¯å¦é¡ºå­
+	 * @param rankList æ‰‹ç‰Œç‰Œå€¼åºåˆ—
+	 * @return æ˜¯æˆ–å¦
 	 */
 	public boolean checkStraight(int[] rankList) {
 		List<Integer> straightCheck = new ArrayList<Integer>();
@@ -116,17 +157,17 @@ public class VideoPoker {
 			straightCheck.add(rankList[i]);
 		}
 		
-		/* ½«ÅÆÖµĞòÁĞ°´µİÔöË³ĞòÖØÅÅ */
+		/* æŒ‰å¤§å°é¡ºåºé‡æ–°æ’åˆ—æ‰‹ç‰Œ */
 		Collections.sort(straightCheck);
 		
-		/* ¼ì²éÊ×Î²ÅÆÖµ²îÖµ£¬Èç¹û²»µÈÓÚ4ÇÒ²»µÈÓÚ12Ôò²»ÊÇË³×Ó£¨µÈÓÚ12ÊÇA¡¢2¡¢3¡¢4¡¢5µÄÇé¿ö£© */
+		/* è®¡ç®—æœ€å¤§æœ€å°ç‰Œå·®å€¼æ˜¯å¦è¶…è¿‡4 */
 		int len = straightCheck.size();
 		int temp = Math.abs(straightCheck.get(0) - straightCheck.get(len - 1));
 		if(temp != 4 && temp != 12) {
 			return result;
 		}
 		
-		/* ¼ì²éÊÇ·ñÓĞÏàÍ¬µÄÅÆ */
+		/* æ£€æŸ¥æ˜¯å¦æœ‰ç›¸åŒç‰Œå€¼ */
 		for(int i=0; i<len-1; i++) {
 			temp = straightCheck.get(i+1) - straightCheck.get(i);
 			if(temp == 0) {
@@ -139,10 +180,108 @@ public class VideoPoker {
 		return result;
 	}
 	
+	/**
+	 * æ£€æŸ¥ç›¸åŒçš„ç‰Œçš„æƒ…å†µ
+	 * @param rankList æ‰‹ç‰Œç‰Œå€¼åºåˆ—
+	 * @return ç›¸åŒç‰Œçš„æƒ…å†µ
+	 */
 	public String checkSameCards(int[] rankList) {
-		int pairs;
-		int trikind;
-		int forkind;
+		int pairs = 0; //å¯¹å­
+		int trikind = 0; //ä¸‰å¼ ä¸€æ ·
+		int forkind = 0; //å››å¼ ä¸€æ ·
+		int temp = 0;
+		HashSet<Integer> sameCard = new HashSet<Integer>();
+		String reward = "nothing";
+		
+		for(int i=0; i<rankList.length - 1; i++) {
+			temp = 0;
+			if(!sameCard.contains(rankList[i])) {
+				sameCard.add(rankList[i]);
+				for(int j=i+1; j<rankList.length; j++) {
+					if(rankList[i] == rankList[j]) {
+						temp++;
+					}
+				}
+				switch(temp) {
+				case 1: pairs++; break;
+				case 2: trikind++; break;
+				case 3: forkind++; break;
+				default: break;
+				}
+			}
+		}
+		
+		if(forkind == 1) {
+			reward = this.rankList[2];
+		}
+		
+		if(trikind == 1 && pairs == 1) {
+			reward = this.rankList[3];
+		}
+		
+		if(trikind == 1 && pairs != 1) {
+			reward = this.rankList[6];
+		}
+		
+		if(pairs == 2) {
+			reward = this.rankList[7];
+		}
+		
+		if(pairs == 1 && trikind != 1) {
+			reward = "pair";
+		}
+		
+		return reward;
+	}
+	
+	/**
+	 * æ£€æŸ¥æ˜¯å¦é«˜å¯¹
+	 * @param rankList æ‰‹ç‰Œç‰Œå€¼åºåˆ—
+	 * @return æ˜¯æˆ–å¦
+	 */
+	public boolean checkHighPair(int[] rankList) {
+		int pairRank = 0;
+		boolean result = false;
+		
+		for(int i=0; i<rankList.length-1; i++) {
+			for(int j=i+1; j<rankList.length; j++) {
+				if(rankList[i] == rankList[j]) {
+					pairRank = rankList[i];
+				}
+			}
+		}
+		
+		if(pairRank < 4) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * æ£€æŸ¥æ˜¯å¦çš‡å®¶åŒèŠ±é¡º
+	 * @param rankList æ‰‹ç‰Œç‰Œå€¼åºåˆ—
+	 * @return æ˜¯æˆ–å¦
+	 */
+	public boolean checkRoyal(int[] rankList) {
+		boolean A = false;
+		boolean K = false;
+		boolean royal = false;
+		
+		for(int i=0; i<rankList.length; i++) {
+			if(rankList[i] == 0) {
+				A = true;
+			}
+			if(rankList[i] == 1) {
+				K = true;
+			}
+		}
+		
+		if(A == true && K == true) {
+			royal = true;
+		}
+		
+		return royal;
 	}
 
 }
